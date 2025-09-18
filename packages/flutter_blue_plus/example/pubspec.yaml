@@ -16,9 +16,16 @@ dependencies:
     # Note: We use a path dependency because the example app & plugin are bundled together.
     # In *your* app you should use ^1.17.3 or similar
     path: ../
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/utnt.png"
 
 dependency_overrides:
   # Note: We use these dependency overrides to test the example app with the latest changes.

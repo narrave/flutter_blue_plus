@@ -10,7 +10,8 @@ import '../widgets/scan_result_tile.dart';
 import '../utils/extra.dart';
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({super.key});
+  final Function(BluetoothDevice)? onDeviceConnected;
+  const ScanScreen({super.key, this.onDeviceConnected});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -29,7 +30,13 @@ class _ScanScreenState extends State<ScanScreen> {
 
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       if (mounted) {
-        setState(() => _scanResults = results);
+        // Filter devices
+        final filtered = results.where((r) => r.device.name.startsWith('utnt_bt_')).toList();
+        setState(() {
+          _scanResults = filtered;
+        });
+        // Show popup if any matching devices found
+        
       }
     }, onError: (e) {
       Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
@@ -80,8 +87,13 @@ class _ScanScreenState extends State<ScanScreen> {
       print(e);
       print("backtrace: $backtrace");
     }
+    // Filter scan results to only show devices whose name starts with 'utnt_bt'
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _scanResults = _scanResults
+            .where((r) => r.device.name.startsWith('utnt_bt'))
+            .toList();
+      });
     }
   }
 
@@ -96,7 +108,11 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   void onConnectPressed(BluetoothDevice device) {
-    device.connectAndUpdateStream().catchError((e) {
+    device.connectAndUpdateStream().then((_) {
+      if (widget.onDeviceConnected != null) {
+        widget.onDeviceConnected!(device);
+      }
+    }).catchError((e) {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e), success: false);
     });
     MaterialPageRoute route = MaterialPageRoute(

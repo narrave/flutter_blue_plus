@@ -19,7 +19,7 @@
 
 
      <application
-         android:label="flutter_blue_plus_example"
+         android:label="UTNT"
          android:name="${applicationName}"
          android:icon="@mipmap/ic_launcher">
          <activity
