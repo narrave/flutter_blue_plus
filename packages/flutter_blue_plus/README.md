@@ -1187,3 +1187,4 @@ Also try `flutter clean`.
 
 
 
+# flutter_blue_plus
